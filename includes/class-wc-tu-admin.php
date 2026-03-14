@@ -366,6 +366,7 @@ class WC_TU_Admin {
 						<?php endif; ?>
 					</td>
 				</tr>
+				<?php if ( function_exists( 'wtu_fs' ) && wtu_fs()->can_use_premium_code() ) : ?>
 				<tr>
 					<td>AI conflict resolver</td>
 					<td>
@@ -376,6 +377,7 @@ class WC_TU_Admin {
 						<?php endif; ?>
 					</td>
 				</tr>
+				<?php endif; ?>
 				<tr>
 					<td>Next scheduled run</td>
 					<td>
@@ -391,6 +393,13 @@ class WC_TU_Admin {
 	}
 
 	private function render_settings(): void {
+		if ( ! function_exists( 'wtu_fs' ) || ! wtu_fs()->can_use_premium_code() ) {
+			?>
+			<h2 style="margin-top:0;">AI Settings</h2>
+			<p style="color:#888;">AI conflict resolution is a <strong>Pro</strong> feature. <a href="https://mindfulplugins.io/plugins/template-updater-for-woocommerce/">Upgrade to Pro</a> to unlock it.</p>
+			<?php
+			return;
+		}
 		$api_key     = get_option( 'wc_tu_anthropic_api_key', '' );
 		$has_api_key = ! empty( $api_key );
 		?>

@@ -6,7 +6,7 @@ Tested up to: 6.9
 Requires PHP: 7.4
 WC requires at least: 7.0
 WC tested up to: 9.4
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,10 +67,21 @@ The plugin only touches PHP template files in your theme’s WooCommerce folder.
 
 == Changelog ==
 
+= 1.0.3 =
+* Added uninstall cleanup — removes all plugin options on uninstall
+
+= 1.0.2 =
+* Fixed Freemius SDK integration (set_basename wrapper, menu config)
+* Gated AI settings behind Pro license
+* Fixed public key and gatekeeper values
+
+= 1.0.1 =
+* First Freemius deploy
+
 = 1.0.0 =
 * Initial release
 
 == Upgrade Notice ==
 
-= 1.0.0 =
-Initial release.
+= 1.0.3 =
+Adds clean uninstall — all plugin data is removed when you delete the plugin.

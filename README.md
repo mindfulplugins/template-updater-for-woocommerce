@@ -1,4 +1,4 @@
-# WC Template Updater
+# Template Updater for WooCommerce
 
 **Automatically keep your WooCommerce template overrides up to date.**
 

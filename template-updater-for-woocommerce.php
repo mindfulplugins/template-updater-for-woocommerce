@@ -3,7 +3,7 @@
  * Plugin Name:       Template Updater for WooCommerce
  * Plugin URI:        https://mindfulplugins.io/plugins/template-updater-for-woocommerce/
  * Description:       Automatically keeps your WooCommerce template overrides up to date. Detects outdated templates, merges core updates into your customizations via 3-way merge, and flags unresolvable conflicts for review.
- * Version:           1.0.4
+ * Version:           1.0.5
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Mindful Plugins
@@ -81,7 +81,7 @@ wtu_fs()->add_action( 'after_uninstall', 'wc_tu_uninstall_cleanup' );
 // =============================================================================
 // Constants
 // =============================================================================
-define( 'WC_TU_VERSION', '1.0.4' );
+define( 'WC_TU_VERSION', '1.0.5' );
 define( 'WC_TU_FILE',    __FILE__ );
 define( 'WC_TU_DIR',     plugin_dir_path( __FILE__ ) );
 define( 'WC_TU_URL',     plugin_dir_url( __FILE__ ) );

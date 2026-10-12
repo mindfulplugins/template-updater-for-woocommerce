@@ -6,7 +6,7 @@ Tested up to: 6.9
 Requires PHP: 7.4
 WC requires at least: 7.0
 WC tested up to: 9.4
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,10 @@ The plugin only touches PHP template files in your theme’s WooCommerce folder.
 
 == Changelog ==
 
+= 1.0.5 =
+* Fixed template fetch for old WooCommerce versions (normalize short version tags like 2.2 to 2.2.0)
+* Added fallback: when base version predates a template file, find nearest available version
+
 = 1.0.4 =
 * Fixed Plugin URI link
 * Removed upgrade notice banner
@@ -84,5 +88,3 @@ The plugin only touches PHP template files in your theme’s WooCommerce folder.
 
 = 1.0.0 =
 * Initial release
-
-== Upgrade Notice ==

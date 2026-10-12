@@ -37,17 +37,64 @@ jobs:
             --exclude ".github/*"
 
       - name: Deploy to Freemius
-        uses: buttonizer/freemius-deploy@v0.1.3
-        with:
-          file_name: build/template-updater-for-woocommerce.zip
-          version: ${{ steps.version.outputs.VERSION }}
-          release_mode: released
+        run: |
+          git clone --depth 1 https://github.com/Freemius/freemius-php-sdk.git /tmp/freemius-php-api
+          cat > /tmp/deploy.php << 'DEPLOY_SCRIPT'
+          <?php
+          $file_name    = getenv('FILE_NAME');
+          $version      = getenv('VERSION');
+          $release_mode = 'released';
+
+          require_once '/tmp/freemius-php-api/freemius/FreemiusBase.php';
+          require_once '/tmp/freemius-php-api/freemius/Freemius.php';
+
+          define('FS__API_SCOPE',      'developer');
+          define('FS__API_DEV_ID',     getenv('DEV_ID'));
+          define('FS__API_PUBLIC_KEY', getenv('PUBLIC_KEY'));
+          define('FS__API_SECRET_KEY', getenv('SECRET_KEY'));
+
+          $plugin_id = getenv('PLUGIN_ID');
+
+          echo "Deploying v{$version}...\n";
+
+          $api = new Freemius_Api(FS__API_SCOPE, FS__API_DEV_ID, FS__API_PUBLIC_KEY, FS__API_SECRET_KEY);
+
+          $tags = $api->Api("plugins/{$plugin_id}/tags.json", 'GET');
+          if (isset($tags->tags[0]) && $tags->tags[0]->version === $version) {
+              $deploy = $tags->tags[0];
+              echo "Version already deployed on Freemius.\n";
+          } else {
+              $deploy = $api->Api("plugins/{$plugin_id}/tags.json", 'POST',
+                  ['add_contributor' => false],
+                  ['file' => $file_name]
+              );
+              if (!property_exists($deploy, 'id')) {
+                  echo "Deploy failed:\n";
+                  print_r($deploy);
+                  exit(1);
+              }
+              echo "Deployed to Freemius.\n";
+
+              $api->Api("plugins/{$plugin_id}/tags/{$deploy->id}.json", 'PUT',
+                  ['release_mode' => $release_mode]
+              );
+              echo "Set as released.\n";
+          }
+
+          // Download free ZIP for GitHub Release
+          $zip_url  = $api->GetSignedUrl("plugins/{$plugin_id}/tags/{$deploy->id}.zip");
+          $free_zip = str_replace('.zip', '__free.zip', $file_name);
+          file_put_contents($free_zip, file_get_contents($zip_url));
+          echo "Downloaded free ZIP: {$free_zip}\n";
+          DEPLOY_SCRIPT
+          php /tmp/deploy.php
         env:
+          FILE_NAME: build/template-updater-for-woocommerce.zip
+          VERSION: ${{ steps.version.outputs.VERSION }}
           PUBLIC_KEY: ${{ secrets.FREEMIUS_PUBLIC_KEY }}
           SECRET_KEY: ${{ secrets.FREEMIUS_SECRET_KEY }}
-          DEV_ID: 30325
-          PLUGIN_ID: 25855
-          PLUGIN_SLUG: template-updater-for-woocommerce
+          DEV_ID: '30325'
+          PLUGIN_ID: '25855'
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
